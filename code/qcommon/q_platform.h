@@ -279,6 +279,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #ifdef __i386__
 #define ARCH_STRING "x86"
 #define HAVE_VM_COMPILED
+#elif defined(__x86_64__) || defined(__amd64__)
+#undef idx64
+#define idx64 1
+#define ARCH_STRING "x86_64"
+#define HAVE_VM_COMPILED
 #elif defined __sparc
 #define ARCH_STRING "sparc"
 #define HAVE_VM_COMPILED

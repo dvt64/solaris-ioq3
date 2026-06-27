@@ -1,0 +1,41 @@
+diff --git a/cmake/platforms/unix.cmake b/cmake/platforms/unix.cmake
+index c7f81db..064862b 100644
+--- a/cmake/platforms/unix.cmake
++++ b/cmake/platforms/unix.cmake
+@@ -20,3 +20,7 @@ list(APPEND COMMON_LIBRARIES
+     ${CMAKE_DL_LIBS}    # Dynamic loader
+     m                   # Math library
+ )
++
++if(CMAKE_SYSTEM_NAME MATCHES "SunOS")
++    list(APPEND COMMON_LIBRARIES socket nsl)
++endif()
+diff --git a/code/qcommon/q_platform.h b/code/qcommon/q_platform.h
+index 960f844..e410f82 100644
+--- a/code/qcommon/q_platform.h
++++ b/code/qcommon/q_platform.h
+@@ -279,6 +279,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ #ifdef __i386__
+ #define ARCH_STRING "x86"
+ #define HAVE_VM_COMPILED
++#elif defined(__x86_64__) || defined(__amd64__)
++#undef idx64
++#define idx64 1
++#define ARCH_STRING "x86_64"
++#define HAVE_VM_COMPILED
+ #elif defined __sparc
+ #define ARCH_STRING "sparc"
+ #define HAVE_VM_COMPILED
+diff --git a/code/qcommon/q_shared.h b/code/qcommon/q_shared.h
+index 1877a42..5281d7d 100644
+--- a/code/qcommon/q_shared.h
++++ b/code/qcommon/q_shared.h
+@@ -132,7 +132,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ #define Q_EXPORT __declspec(dllexport)
+ #elif (defined __SUNPRO_C)
+ #define Q_EXPORT __global
+-#elif ((__GNUC__ >= 3) && (!__EMX__) && (!sun))
++#elif ((__GNUC__ >= 3) && (!__EMX__))
+ #define Q_EXPORT __attribute__((visibility("default")))
+ #else
+ #define Q_EXPORT
